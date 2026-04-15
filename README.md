@@ -14,7 +14,7 @@ MeshWX connects to your radio via USB Serial or Bluetooth Low Energy, joins the 
 
 ### Option 1: Download the Desktop App
 
-Download pre-built binaries from the [Releases](https://github.com/digitaino/meshwx/releases) page:
+Download pre-built binaries from the [Releases](https://github.com/digitaino/meshwx-client/releases) page:
 
 | Platform | Download |
 |----------|----------|
@@ -30,7 +30,7 @@ The macOS build is signed and notarized by Apple. On Linux, you may need to `chm
 Requires [Node.js](https://nodejs.org/) (no dependencies to install).
 
 ```bash
-git clone https://github.com/digitaino/meshwx.git
+git clone https://github.com/digitaino/meshwx-client.git
 cd meshwx
 node serve.js
 ```
