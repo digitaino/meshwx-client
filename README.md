@@ -102,6 +102,11 @@ Cross-platform builds from macOS work for Windows and Linux. Add `-- --x64` or `
 
 MeshWX uses a compact binary protocol (v4) designed for LoRa's low bandwidth. Weather data from NWS is compressed into small packets, COBS-encoded, and broadcast over MeshCore mesh channels. The JavaScript decoder in `js/decoder.js` is a port of the Swift decoder used in the [PocketMesh](https://github.com/pesqair/PocketMesh) iOS app.
 
+## Related
+
+- **[meshwx](https://github.com/digitaino/meshwx)** — The weather bot server. Fetches NWS EMWIN data and broadcasts it over LoRa mesh networks.
+- **[PocketMesh](https://github.com/pesqair/PocketMesh)** — iOS MeshCore client with built-in MeshWX weather decoding.
+
 ## License
 
 MIT
