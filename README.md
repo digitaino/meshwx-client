@@ -105,7 +105,7 @@ MeshWX uses a compact binary protocol (v4) designed for LoRa's low bandwidth. We
 ## Related
 
 - **[meshwx](https://github.com/digitaino/meshwx)** — The weather bot server. Fetches NWS EMWIN data and broadcasts it over LoRa mesh networks.
-- **[PocketMesh](https://github.com/pesqair/PocketMesh)** — iOS MeshCore client with built-in MeshWX weather decoding.
+- **[DigitainoMesh](https://github.com/digitaino/DigitainoMesh)** — iOS MeshCore client with built-in MeshWX weather decoding.
 
 ## License
 
