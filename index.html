@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeshWX — Mesh Weather Client</title>
+    <link rel="stylesheet" href="css/portal.css">
+    <link rel="stylesheet" href="vendor/maplibre/maplibre-gl.css">
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- Header -->
+        <header>
+            <div>
+                <h1>MeshWX</h1>
+                <span id="node-name" style="font-size:0.8rem; color:var(--text-muted)"></span>
+            </div>
+            <div class="status">
+                <span class="status-dot"></span>
+                <span class="status-text">Disconnected</span>
+                <span style="margin-left:8px; color:var(--text-muted); font-size:0.8rem">
+                    <span id="msg-count">0</span> msgs
+                </span>
+                <button id="connect-btn-usb" class="btn-primary btn-sm" style="margin-left:8px">USB</button>
+                <button id="connect-btn-ble" class="btn-primary btn-sm" style="margin-left:4px">BLE</button>
+                <button id="disconnect-btn" class="btn-danger btn-sm" style="display:none; margin-left:8px">Disconnect</button>
+            </div>
+        </header>
+
+        <!-- Connect Screen (shown when not connected) -->
+        <div id="connect-screen" class="connect-screen">
+            <h2>Mesh Weather Client</h2>
+            <p>Connect your MeshCore companion radio via USB or Bluetooth to receive live weather data broadcasts over the mesh network.</p>
+            <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap">
+                <button id="connect-btn-hero-usb" class="btn-primary" style="padding:12px 32px; font-size:1rem">
+                    USB Serial
+                </button>
+                <button id="connect-btn-hero-ble" class="btn-primary" style="padding:12px 32px; font-size:1rem">
+                    Bluetooth
+                </button>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-muted)">
+                Requires Chrome or Edge with Web Serial or Web Bluetooth support.
+            </p>
+        </div>
+
+        <!-- Dashboard (shown when connected) -->
+        <div id="dashboard" style="display:none">
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="setup">Setup</button>
+                <button class="tab" data-tab="dashboard">Dashboard</button>
+                <button class="tab" data-tab="radar">Map</button>
+                <button class="tab" data-tab="warnings">Warnings</button>
+                <button class="tab" data-tab="log">Message Log</button>
+            </div>
+
+            <!-- Tab: Setup (channel provisioning + bot discovery) -->
+            <div id="tab-setup" class="tab-content">
+                <div id="setup-content">
+                    <div class="empty-state"><div class="icon">--</div>Scanning channels...</div>
+                </div>
+            </div>
+
+            <!-- Tab: Dashboard -->
+            <div id="tab-dashboard" class="tab-content" style="display:none">
+
+                <!-- Request Weather Data -->
+                <div class="section">
+                    <div class="section-title">Request Weather Data</div>
+                    <div class="card" style="padding:12px">
+                        <div style="display:flex; gap:8px; align-items:center">
+                            <input type="text" id="search-input" class="search-input"
+                                   placeholder="Search city, station, or ICAO code..."
+                                   autocomplete="off">
+                            <button id="search-btn" class="btn-primary btn-sm">Search</button>
+                        </div>
+                        <div id="search-results" style="margin-top:8px"></div>
+                        <div id="pending-requests" style="margin-top:8px"></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Current Conditions</div>
+                    <div id="observations-content">
+                        <div class="empty-state"><div class="icon">--</div>Waiting for observations...</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Forecast</div>
+                    <div id="forecasts-content">
+                        <div class="empty-state"><div class="icon">--</div>Waiting for forecasts...</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Active Warnings</div>
+                    <div id="warnings-content">
+                        <div class="empty-state"><div class="icon">--</div>No active warnings</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Nowcast (Short-Term Outlook)</div>
+                    <div id="nowcasts-content">
+                        <div class="empty-state"><div class="icon">--</div>No nowcast data</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Hazardous Weather Outlook</div>
+                    <div id="outlooks-content">
+                        <div class="empty-state"><div class="icon">--</div>No outlook data</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Fire Weather Forecast</div>
+                    <div id="fire-weather-content">
+                        <div class="empty-state"><div class="icon">--</div>No fire weather data</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Storm Reports</div>
+                    <div id="storm-reports-content">
+                        <div class="empty-state"><div class="icon">--</div>No storm reports</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Rain Observations</div>
+                    <div id="rain-obs-content">
+                        <div class="empty-state"><div class="icon">--</div>No rain observations</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Daily Climate</div>
+                    <div id="daily-climate-content">
+                        <div class="empty-state"><div class="icon">--</div>No climate data</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Map -->
+            <div id="tab-radar" class="tab-content" style="display:none">
+                <div class="section">
+                    <div class="section-title">Weather Map</div>
+                    <div id="map-container" style="height:400px; border-radius:var(--radius); overflow:hidden; border:1px solid var(--border)"></div>
+                </div>
+                <div class="section">
+                    <div class="section-title">Radar</div>
+                    <div id="radar-content">
+                        <div class="empty-state"><div class="icon">--</div>Waiting for radar data...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Warnings -->
+            <div id="tab-warnings" class="tab-content" style="display:none">
+                <div class="section">
+                    <div class="section-title">All Warnings</div>
+                    <div id="warnings-tab-content">
+                        <div class="empty-state"><div class="icon">--</div>No active warnings</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Message Log -->
+            <div id="tab-log" class="tab-content" style="display:none">
+                <div class="section">
+                    <div class="section-title">Message Log</div>
+                    <div id="log-content" class="log-panel"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="vendor/maplibre/maplibre-gl.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

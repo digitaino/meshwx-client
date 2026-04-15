@@ -1,0 +1,11 @@
+{
+  "name": "meshwx-web",
+  "version": "1.0.0",
+  "description": "MeshWX — Mesh Weather Web Client. Connects to a MeshCore companion radio via USB or Bluetooth to receive live weather data over LoRa mesh networks.",
+  "scripts": {
+    "start": "node serve.js"
+  },
+  "keywords": ["meshcore", "lora", "weather", "meshtastic"],
+  "license": "MIT",
+  "private": true
+}

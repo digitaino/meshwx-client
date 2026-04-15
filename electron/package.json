@@ -1,0 +1,83 @@
+{
+  "name": "meshwx",
+  "version": "1.0.0",
+  "description": "MeshWX — Mesh Weather Desktop Client",
+  "author": {
+    "name": "Digitaino",
+    "email": "meshwx@digitaino.com"
+  },
+  "homepage": "https://github.com/digitaino/meshwx",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
+    "build:all": "electron-builder --mac --win --linux"
+  },
+  "build": {
+    "appId": "com.meshwx.desktop",
+    "productName": "MeshWX",
+    "files": [
+      "main.js"
+    ],
+    "extraResources": [
+      {
+        "from": "../index.html",
+        "to": "app/index.html"
+      },
+      {
+        "from": "../css",
+        "to": "app/css"
+      },
+      {
+        "from": "../js",
+        "to": "app/js"
+      },
+      {
+        "from": "../data",
+        "to": "app/data"
+      },
+      {
+        "from": "../geo",
+        "to": "app/geo"
+      },
+      {
+        "from": "../vendor",
+        "to": "app/vendor"
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "category": "public.app-category.weather",
+      "identity": "Digitaino LLC (RU9VTBSCM5)",
+      "notarize": true,
+      "hardenedRuntime": true,
+      "entitlements": "entitlements.plist",
+      "entitlementsInherit": "entitlements.plist",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
+    }
+  },
+  "devDependencies": {
+    "electron": "^41.2.0",
+    "electron-builder": "^26.0.0"
+  }
+}
